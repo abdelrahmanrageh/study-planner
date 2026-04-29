@@ -16,13 +16,22 @@ class TaskFormWindow(ctk.CTkToplevel):
         self.task     = task
 
         self.title("Edit Task" if task else "Add Task")
-        self.geometry("420x420")
+        self.geometry("650x650")
         self.resizable(False, False)
-        self.grab_set()
+        self.transient(parent)
 
         self._build_form()
         if task:
             self._populate(task)
+
+        self.after(0, self._activate_modal)
+
+    def _activate_modal(self):
+        if not self.winfo_exists():
+            return
+        self.wait_visibility()
+        self.lift()
+        self.grab_set()
 
     def _build_form(self):
         pad = {"padx": 20, "pady": 6}
