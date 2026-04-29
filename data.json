@@ -1,0 +1,20 @@
+[
+  {
+    "id": "f51f0172-de0a-416a-88f4-8c4a197010b7",
+    "title": "Cloud Computing Assignment",
+    "subject": "Cloud Computing",
+    "deadline": "2026-04-30",
+    "effort_hours": 0.5,
+    "priority": 2,
+    "is_done": false
+  },
+  {
+    "id": "e76d2834-220d-4f53-bd21-45c07a46a17f",
+    "title": "Parallel Programming Assignmets",
+    "subject": "Parallel Computing",
+    "deadline": "2026-04-30",
+    "effort_hours": 1.0,
+    "priority": 3,
+    "is_done": false
+  }
+]
