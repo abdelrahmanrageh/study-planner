@@ -3,7 +3,7 @@ from __future__ import annotations
 import customtkinter as ctk
 
 from models.task import TaskManager
-from storage.json_store import save_tasks
+from storage.json import save_tasks
 
 
 class ProgressTracker:
