@@ -24,14 +24,26 @@ class TaskFormWindow(ctk.CTkToplevel):
         if task:
             self._populate(task)
 
-        self.after(0, self._activate_modal)
+        self.after(50, self._activate_modal)
 
-    def _activate_modal(self):
+    def _activate_modal(self, _retries: int = 20):
+        """
+        Safely grab modal focus once the window is visible.
+
+        wait_visibility() raises TclError on Linux if the window is destroyed
+        before it finishes mapping, so we poll winfo_viewable() instead.
+        """
         if not self.winfo_exists():
             return
-        self.wait_visibility()
-        self.lift()
-        self.grab_set()
+        if self.winfo_viewable():
+            self.lift()
+            try:
+                self.grab_set()
+            except Exception:
+                pass
+        elif _retries > 0:
+            # Window not yet visible — try again after one more event loop tick
+            self.after(50, lambda: self._activate_modal(_retries - 1))
 
     def _build_form(self):
         pad = {"padx": 20, "pady": 6}
