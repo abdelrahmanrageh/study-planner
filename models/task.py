@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date
 import uuid
 
 
@@ -149,3 +149,4 @@ class TaskManager:
 
     def load(self, tasks: list[Task]) -> None:
         """Replace internal list (called by Dev 3 on startup)."""
+        self._tasks = list(tasks)

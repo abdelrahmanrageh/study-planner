@@ -28,7 +28,8 @@ def _fmt_time(hour_float: float) -> str:
 
 
 def generate_daily_plan(tasks: list[Task],
-                        available_hours: float = DAILY_HOURS) -> list[Slot]:
+                        available_hours: float = DAILY_HOURS,
+                        task_ids: set[str] | None = None) -> list[Slot]:
     """
     Sorts pending tasks by urgency score (highest first),
     then fills the day with time slots until available_hours is used up.
@@ -41,6 +42,8 @@ def generate_daily_plan(tasks: list[Task],
         List of Slot objects in time order, starting at WORK_START_HOUR.
     """
     pending = [t for t in tasks if not t.is_done]
+    if task_ids is not None:
+        pending = [t for t in pending if t.id in task_ids]
 
     # Sort by urgency score descending — Dev 1's formula drives this
     pending.sort(key=lambda t: t.urgency_score(), reverse=True)

@@ -2,21 +2,9 @@
 from __future__ import annotations
 import customtkinter as ctk
 from typing import Callable
+from textwrap import shorten
+from config import AppleTheme
 from scheduler.planner import Slot
-
-
-# Apple Design Tokens (from SKILL.md)
-class AppleTheme:
-    """Apple design system color tokens."""
-    SURFACE_BASE = "#FFFFFF"       # Page background
-    SURFACE_RAISED = "#F5F5F7"     # Cards, elevated surfaces
-    ACCENT = "#155BD0"             # Primary actions, focus
-    TEXT_PRIMARY = "#1D1D1F"        # Headings, body text
-    TEXT_SECONDARY = "#6E6E73"     # Secondary, muted text
-    TEXT_TERTIARY = "#86868B"      # Additional text
-    BORDER_DEFAULT = "#D2D2D7"      # Subtle borders
-    SUCCESS = "#34C759"            # Success states
-    DESTRUCTIVE = "#FF3B30"        # Destructive actions
 
 
 class ScheduleFrame(ctk.CTkFrame):
@@ -37,7 +25,9 @@ class ScheduleFrame(ctk.CTkFrame):
         super().__init__(
             parent,
             fg_color=AppleTheme.SURFACE_BASE,
-            corner_radius=21
+            corner_radius=21,
+            border_width=1,
+            border_color=AppleTheme.BORDER_DEFAULT,
         )
         self.on_generate  = on_generate
         self.on_mark_done = on_mark_done
@@ -52,26 +42,33 @@ class ScheduleFrame(ctk.CTkFrame):
         bar = ctk.CTkFrame(self, fg_color="transparent")
         bar.pack(fill="x", padx=13, pady=(13, 4))
 
-        # Apple-style heading: 27px, normal weight
+        title_col = ctk.CTkFrame(bar, fg_color="transparent")
+        title_col.pack(side="left")
+
         ctk.CTkLabel(
-            bar,
+            title_col,
             text="Today's Study Plan",
             font=ctk.CTkFont(size=27, weight="normal"),
             text_color=AppleTheme.TEXT_PRIMARY
-        ).pack(side="left")
+        ).pack(anchor="w")
+        ctk.CTkLabel(
+            title_col,
+            text="Generate a focused plan, then mark work complete as you go.",
+            font=ctk.CTkFont(size=13, weight="normal"),
+            text_color=AppleTheme.TEXT_SECONDARY,
+        ).pack(anchor="w", pady=(2, 0))
 
         # Apple-style ghost button with hover effect
         ctk.CTkButton(
             bar,
             text="Generate Plan",
-            fg_color="transparent",
-            text_color=AppleTheme.ACCENT,
-            border_width=1,
-            border_color=AppleTheme.ACCENT,
-            corner_radius=21,
+            fg_color=AppleTheme.ACCENT,
+            text_color="#FFFFFF",
+            border_width=0,
+            corner_radius=999,
             height=34,
-            hover_color=AppleTheme.SURFACE_RAISED,
-            font=ctk.CTkFont(size=14, weight="normal"),
+            hover_color=AppleTheme.ACCENT_HOVER,
+            font=ctk.CTkFont(size=14, weight="bold"),
             command=self.on_generate
         ).pack(side="right")
 
@@ -82,7 +79,7 @@ class ScheduleFrame(ctk.CTkFrame):
             self,
             fg_color="transparent",
             scrollbar_button_color=AppleTheme.TEXT_TERTIARY,
-            scrollbar_button_hover_color=AppleTheme.TEXT_SECONDARY
+            scrollbar_button_hover_color=AppleTheme.TEXT_SECONDARY,
         )
         self.scroll.pack(fill="both", expand=True, padx=13, pady=8)
 
@@ -112,7 +109,7 @@ class ScheduleFrame(ctk.CTkFrame):
         card = ctk.CTkFrame(
             self.scroll,
             fg_color=AppleTheme.SURFACE_RAISED,
-            corner_radius=21,
+            corner_radius=18,
             border_width=1,
             border_color=AppleTheme.BORDER_DEFAULT
         )
@@ -124,7 +121,7 @@ class ScheduleFrame(ctk.CTkFrame):
             text=slot.display_range(),
             width=130,
             anchor="center",
-            font=ctk.CTkFont(size=16, weight="normal"),
+            font=ctk.CTkFont(size=16, weight="bold"),
             text_color=AppleTheme.TEXT_PRIMARY
         )
         time_lbl.pack(side="left", padx=(13, 8), pady=13)
@@ -137,8 +134,8 @@ class ScheduleFrame(ctk.CTkFrame):
         # Note: Apple design often uses a single font weight for body text, relying on size and color for hierarchy.
         ctk.CTkLabel(
             info,
-            text=slot.task_title,
-            font=ctk.CTkFont(size=16, weight="normal"),
+            text=shorten(slot.task_title, width=32, placeholder="…"),
+            font=ctk.CTkFont(size=16, weight="bold"),
             text_color=AppleTheme.TEXT_PRIMARY,
             anchor="w"
         ).pack(anchor="w", padx=(0, 0))
@@ -146,7 +143,7 @@ class ScheduleFrame(ctk.CTkFrame):
         # Subject and duration: 14px, secondary color
         ctk.CTkLabel(
             info,
-            text=f"{slot.subject}  ·  {slot.duration_hours}h",
+            text=shorten(f"{slot.subject}  ·  {slot.duration_hours}h", width=30, placeholder="…"),
             font=ctk.CTkFont(size=14, weight="normal"),
             text_color=AppleTheme.TEXT_SECONDARY,
             anchor="w"

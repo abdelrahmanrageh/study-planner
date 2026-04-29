@@ -1,3 +1,0 @@
-Requirement already satisfied: customtkinter in ./venv/lib/python3.14/site-packages (5.2.2)
-Requirement already satisfied: darkdetect in ./venv/lib/python3.14/site-packages (from customtkinter) (0.8.0)
-Requirement already satisfied: packaging in ./venv/lib/python3.14/site-packages (from customtkinter) (26.2)

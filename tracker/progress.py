@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import customtkinter as ctk
 
+from config import AppleTheme
 from models.task import TaskManager
 from storage.json import save_tasks
 
@@ -65,10 +66,15 @@ class ProgressWidget(ctk.CTkFrame):
 		super().__init__(parent, fg_color="transparent")
 		self.tracker = tracker
 
-		self.bar = ctk.CTkProgressBar(self, width=300)
+		self.bar = ctk.CTkProgressBar(
+			self,
+			width=260,
+			fg_color=AppleTheme.FILL_SECONDARY,
+			progress_color=AppleTheme.ACCENT,
+		)
 		self.bar.pack(side="left", padx=(0, 12))
 
-		self.label = ctk.CTkLabel(self, text="")
+		self.label = ctk.CTkLabel(self, text="", text_color=AppleTheme.TEXT_SECONDARY)
 		self.label.pack(side="left")
 
 		self.refresh()

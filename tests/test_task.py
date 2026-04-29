@@ -189,6 +189,15 @@ class TestTaskManager(unittest.TestCase):
         # Should not raise
         self.mgr.load(new_tasks)
 
+    def test_load_replaces_existing_tasks(self):
+        original = self.mgr.add_task("A", "B", _future(), 1.0, 1)
+        replacement = [Task("Z", "W", _future(), 2.0, 2)]
+
+        self.mgr.load(replacement)
+
+        self.assertIsNone(self.mgr.get_by_id(original.id))
+        self.assertEqual(self.mgr.get_all(), replacement)
+
 
 # ── Validation tests ─────────────────────────────────────────────────────
 

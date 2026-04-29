@@ -4,7 +4,7 @@ import customtkinter as ctk
 from datetime import date
 from typing import Callable
 from models.task import Task, TaskManager, ValidationError
-from config import PRIORITY_LABELS, PRIORITY_VALUES
+from config import PRIORITY_LABELS, PRIORITY_VALUES, AppleTheme
 
 
 class TaskFormWindow(ctk.CTkToplevel):
@@ -15,8 +15,9 @@ class TaskFormWindow(ctk.CTkToplevel):
         self.on_save  = on_save
         self.task     = task
 
+        self.configure(fg_color=AppleTheme.BG_BASE)
         self.title("Edit Task" if task else "Add Task")
-        self.geometry("650x650")
+        self.geometry("560x680")
         self.resizable(False, False)
         self.transient(parent)
 
@@ -46,42 +47,89 @@ class TaskFormWindow(ctk.CTkToplevel):
             self.after(50, lambda: self._activate_modal(_retries - 1))
 
     def _build_form(self):
-        pad = {"padx": 20, "pady": 6}
+        shell = ctk.CTkFrame(
+            self,
+            fg_color=AppleTheme.SURFACE_BASE,
+            corner_radius=24,
+            border_width=1,
+            border_color=AppleTheme.BORDER_DEFAULT,
+        )
+        shell.pack(fill="both", expand=True, padx=20, pady=20)
 
-        ctk.CTkLabel(self, text="Title").pack(anchor="w", **pad)
+        content = ctk.CTkScrollableFrame(
+            shell,
+            fg_color="transparent",
+            scrollbar_button_color=AppleTheme.TEXT_TERTIARY,
+            scrollbar_button_hover_color=AppleTheme.TEXT_SECONDARY,
+        )
+        content.pack(fill="both", expand=True, padx=4, pady=(8, 4))
+
+        footer = ctk.CTkFrame(shell, fg_color="transparent")
+        footer.pack(fill="x", padx=24, pady=(0, 18))
+
+        pad = {"padx": 24, "pady": 6}
+
+        ctk.CTkLabel(content, text="Title", text_color=AppleTheme.TEXT_PRIMARY).pack(anchor="w", **pad)
         self.title_var = ctk.StringVar()
-        ctk.CTkEntry(self, textvariable=self.title_var, width=380).pack(**pad)
-        self.err_title = ctk.CTkLabel(self, text="", text_color="red", font=("", 11))
-        self.err_title.pack(anchor="w", padx=20)
+        ctk.CTkEntry(content, textvariable=self.title_var, width=380,
+                     fg_color=AppleTheme.SURFACE_RAISED,
+                     border_color=AppleTheme.BORDER_DEFAULT).pack(**pad)
+        self.err_title = ctk.CTkLabel(content, text="", text_color=AppleTheme.DESTRUCTIVE, font=("", 11))
+        self.err_title.pack(anchor="w", padx=24)
 
-        ctk.CTkLabel(self, text="Subject").pack(anchor="w", **pad)
+        ctk.CTkLabel(content, text="Subject", text_color=AppleTheme.TEXT_PRIMARY).pack(anchor="w", **pad)
         self.subject_var = ctk.StringVar()
-        ctk.CTkEntry(self, textvariable=self.subject_var, width=380).pack(**pad)
-        self.err_subject = ctk.CTkLabel(self, text="", text_color="red", font=("", 11))
-        self.err_subject.pack(anchor="w", padx=20)
+        ctk.CTkEntry(content, textvariable=self.subject_var, width=380,
+                     fg_color=AppleTheme.SURFACE_RAISED,
+                     border_color=AppleTheme.BORDER_DEFAULT).pack(**pad)
+        self.err_subject = ctk.CTkLabel(content, text="", text_color=AppleTheme.DESTRUCTIVE, font=("", 11))
+        self.err_subject.pack(anchor="w", padx=24)
 
-        ctk.CTkLabel(self, text="Deadline (YYYY-MM-DD)").pack(anchor="w", **pad)
+        ctk.CTkLabel(content, text="Deadline (YYYY-MM-DD)", text_color=AppleTheme.TEXT_PRIMARY).pack(anchor="w", **pad)
         self.deadline_var = ctk.StringVar(value=date.today().isoformat())
-        ctk.CTkEntry(self, textvariable=self.deadline_var, width=380).pack(**pad)
-        self.err_deadline = ctk.CTkLabel(self, text="", text_color="red", font=("", 11))
-        self.err_deadline.pack(anchor="w", padx=20)
+        ctk.CTkEntry(content, textvariable=self.deadline_var, width=380,
+                     fg_color=AppleTheme.SURFACE_RAISED,
+                     border_color=AppleTheme.BORDER_DEFAULT).pack(**pad)
+        self.err_deadline = ctk.CTkLabel(content, text="", text_color=AppleTheme.DESTRUCTIVE, font=("", 11))
+        self.err_deadline.pack(anchor="w", padx=24)
 
-        ctk.CTkLabel(self, text="Effort (hours)").pack(anchor="w", **pad)
+        ctk.CTkLabel(content, text="Effort (hours)", text_color=AppleTheme.TEXT_PRIMARY).pack(anchor="w", **pad)
         self.effort_var = ctk.StringVar(value="1.0")
-        ctk.CTkEntry(self, textvariable=self.effort_var, width=380).pack(**pad)
-        self.err_effort = ctk.CTkLabel(self, text="", text_color="red", font=("", 11))
-        self.err_effort.pack(anchor="w", padx=20)
+        ctk.CTkEntry(content, textvariable=self.effort_var, width=380,
+                     fg_color=AppleTheme.SURFACE_RAISED,
+                     border_color=AppleTheme.BORDER_DEFAULT).pack(**pad)
+        self.err_effort = ctk.CTkLabel(content, text="", text_color=AppleTheme.DESTRUCTIVE, font=("", 11))
+        self.err_effort.pack(anchor="w", padx=24)
 
-        ctk.CTkLabel(self, text="Priority").pack(anchor="w", **pad)
+        ctk.CTkLabel(content, text="Priority", text_color=AppleTheme.TEXT_PRIMARY).pack(anchor="w", **pad)
         self.priority_var = ctk.StringVar(value="Medium")
-        ctk.CTkOptionMenu(self, variable=self.priority_var,
-                          values=list(PRIORITY_VALUES.keys()),
-                          width=380).pack(**pad)
+        ctk.CTkOptionMenu(
+            content,
+            variable=self.priority_var,
+            values=list(PRIORITY_VALUES.keys()),
+            width=380,
+            fg_color=AppleTheme.SURFACE_RAISED,
+            button_color=AppleTheme.ACCENT,
+            button_hover_color=AppleTheme.ACCENT_HOVER,
+            dropdown_fg_color=AppleTheme.SURFACE_BASE,
+            dropdown_text_color=AppleTheme.TEXT_PRIMARY,
+            text_color=AppleTheme.TEXT_PRIMARY,
+        ).pack(**pad)
 
-        self.err_general = ctk.CTkLabel(self, text="", text_color="red", font=("", 11))
-        self.err_general.pack(anchor="w", padx=20)
+        self.err_general = ctk.CTkLabel(content, text="", text_color=AppleTheme.DESTRUCTIVE, font=("", 11))
+        self.err_general.pack(anchor="w", padx=24)
 
-        ctk.CTkButton(self, text="Save", command=self._submit, width=380).pack(pady=16)
+        ctk.CTkButton(
+            footer,
+            text="Save",
+            command=self._submit,
+            width=380,
+            fg_color=AppleTheme.ACCENT,
+            hover_color=AppleTheme.ACCENT_HOVER,
+            text_color="#FFFFFF",
+            corner_radius=999,
+            height=38,
+        ).pack(anchor="center")
 
     def _populate(self, task: Task):
         self.title_var.set(task.title)

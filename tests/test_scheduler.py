@@ -130,6 +130,12 @@ class TestGenerateDailyPlan(unittest.TestCase):
         self.assertEqual(s.task_title, t.title)
         self.assertEqual(s.subject, t.subject)
 
+    def test_selected_task_ids_limit_plan(self):
+        t1 = _make_task("A", priority=3)
+        t2 = _make_task("B", priority=2)
+        plan = generate_daily_plan([t1, t2], available_hours=6, task_ids={t2.id})
+        self.assertEqual([s.task_title for s in plan], ["B"])
+
 
 if __name__ == "__main__":
     unittest.main()
