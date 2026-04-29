@@ -27,6 +27,7 @@ class TaskListFrame(ctk.CTkFrame):
         self.on_delete = on_delete
         self._filter   = "All"
 
+
         self._build_toolbar()
         self._build_header()
         self._build_scroll_area()
@@ -37,7 +38,6 @@ class TaskListFrame(ctk.CTkFrame):
     def _build_toolbar(self):
         bar = ctk.CTkFrame(self, fg_color="transparent")
         bar.pack(fill="x", padx=8, pady=(8, 0))
-
         ctk.CTkLabel(bar, text="Show:").pack(side="left", padx=(0, 6))
         self.filter_var = ctk.StringVar(value="All")
         ctk.CTkOptionMenu(bar, variable=self.filter_var,
@@ -66,6 +66,7 @@ class TaskListFrame(ctk.CTkFrame):
         self.scroll.pack(fill="both", expand=True, padx=8, pady=4)
 
     # ── Public API ────────────────────────────────────────────────────────
+
 
     def refresh(self, tasks: list[Task]):
         """Re-render the table with a new task list. Call after any change."""
