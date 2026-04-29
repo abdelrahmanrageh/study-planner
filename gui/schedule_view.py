@@ -1,8 +1,4 @@
 # gui/schedule_view.py
-"""
-Dev 6 — Schedule Display GUI
-Apple-inspired design following Apple UI Skills guidelines.
-"""
 from __future__ import annotations
 import customtkinter as ctk
 from typing import Callable
@@ -137,7 +133,8 @@ class ScheduleFrame(ctk.CTkFrame):
         info = ctk.CTkFrame(card, fg_color="transparent")
         info.pack(side="left", fill="x", expand=True, pady=8)
 
-        # Task title: 16px, normal weight
+        # Task title: 16px , normal weight
+        # Note: Apple design often uses a single font weight for body text, relying on size and color for hierarchy.
         ctk.CTkLabel(
             info,
             text=slot.task_title,
